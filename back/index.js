@@ -7,8 +7,8 @@ const indexKeys = Object.keys(index);
 app = express();
 
 app.get("/api/entry/:entry/:defNo", (req, res) => {
-  const defNo = req.params.defNo;
-  const entry = req.params.entry.toLowerCase();
+  const {defNo, entry} = req.params;
+
   const definitions = index[entry];
   if (definitions == null) {
     res.sendStatus(404);
@@ -22,11 +22,19 @@ app.get("/api/entry/:entry/:defNo", (req, res) => {
   }
 });
 
+function sum(a, b) {
+  return a+b;
+}
+
+function caseInsMatch(needle, haystack) {
+  return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+}
+
 function preview(segments) {
   const cap = 100;
 
   const lens = segments.map(([, text]) => text.length);
-  const cumLens =lens.map((len, i, arr) => arr.slice(0, i+1).reduce((a, b) => a + b));
+  const cumLens =lens.map((len, i, arr) => arr.slice(0, i+1).reduce(sum));
   
   const limit = cumLens.find(len => len > cap);
   const i = cumLens.indexOf(limit);
@@ -38,7 +46,7 @@ function preview(segments) {
   const first = segments.slice(0, i);
   const last = segments[i];
 
-  const firstLen = first.map(([, text]) => text.length).reduce((a, b) => a + b);
+  const firstLen = first.map(([, text]) => text.length).reduce(sum);
   const shortened = [...first, [
     last[0],
     last[1].substr(0, cap - firstLen)
@@ -48,10 +56,10 @@ function preview(segments) {
 }
 
 app.get("/api/search/:query", (req, res) => {
-  const query = req.params.query.toLowerCase();
+  const query = req.params.query;
   
   const found = indexKeys
-    .filter(key => key.indexOf(query) !== -1)
+    .filter(key => caseInsMatch(query, key))
     .slice(0, 25)
     .map(key => {
       const defs = index[key];

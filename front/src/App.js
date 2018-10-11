@@ -122,17 +122,13 @@ class SearchView extends Component {
       return <NotFound query={query} />;
     }
 
-    if (
-      entries.length === 1 &&
-      entries[0][0].toLowerCase() === query.toLowerCase()
-    ) {
-      return <Redirect to={`/entry/${query}/1`} />;
+    if (entries.length === 1) {
+      const entry = entries[0].entry;
+      if (entry.toLowerCase() === query.toLowerCase()) {
+        return <Redirect to={`/entry/${entry}/1`} />;
+      }
     }
-
-    /*const withMultiple = entries
-      .filter(([entry, defNo]) => defNo > 1)
-      .map(([entry, defNo]) => entry);*/
-
+    
     return hasReceived === false ? (
       <span className="loading" />
     ) : (
