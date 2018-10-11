@@ -1,0 +1,40 @@
+version: '3'
+
+networks:
+  proxy:
+    external: true
+
+services:
+  traefik:
+    image: traefik:1.7-alpine
+    command: --api --docker
+    ports:
+      - 8080:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - proxy
+
+  svetym-back:
+    image: hannespetri/svetym-back
+    restart: always
+    networks:
+      - proxy
+    labels:
+      - "traefik.backend=svetym-back"
+      - "traefik.frontend.rule=Host: localhost; PathPrefix: /api"
+      - "traefik.docker.network=proxy"
+      - "traefik.port=8989"
+    container_name: svetym-back
+  
+  svetym-front:
+    image: hannespetri/svetym-front
+    restart: always
+    networks:
+      - proxy
+    labels:
+      - "traefik.backend=svetym-front"
+      - "traefik.frontend.rule=Host: localhost"
+      - "traefik.docker.network=proxy"
+      - "traefik.port=80"
+    container_name: svetym-front

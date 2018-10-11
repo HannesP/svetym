@@ -1,0 +1,53 @@
+.definition {
+  margin-bottom: 1em;
+  line-height: 1.5em;
+}
+
+nav {
+  margin-bottom: 1em;
+  user-select: none;
+}
+
+.separator::after {
+  content: ' • ';
+  color: lightgray;
+}
+
+.BigSearch form {
+  size: 2em !important;
+}
+
+img {
+  width: 10em;
+  height: 10em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  opacity: 0.15;
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.loading {
+  opacity: 0;
+  animation: fadeIn 1s;
+  animation-delay: 1s;
+}
+
+.loading::after {
+  content: "Loading...";
+}
+
+.BigSearch h1, .BigSearch h2 {
+  text-align: center;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-size: 1.5em;
+}
+
+.BigSearch h2 {
+  margin-bottom: 1em;
+  font-size: 1em;
+}

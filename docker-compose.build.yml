@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  svetym-back:
+    image: hannespetri/svetym-back
+    build:
+      context:
+        back
+  svetym-front:
+    image: hannespetri/svetym-front
+    build:
+      context:
+        front
