@@ -83,14 +83,10 @@ def adjust_text_segs(chunk):
 	return [adjust(seg) for seg in chunk]
 
 def process_queue(queue):
-	for seg in queue:
-		print(seg.tag, seg.value)
-	print('\n'*20)
-
-
 	res = [[]]
 	was_br = False
 	was_multi_br = False
+	had_b = False
 
 	for seg in queue:
 		if seg.is_br():
@@ -102,6 +98,11 @@ def process_queue(queue):
 		else:
 			if was_multi_br:
 				res.append([])
+				had_b = False
+			elif seg.tag == 'b' and not had_b:
+				res.append([])
+				had_b = True
+
 			res[-1].append(seg)
 			was_multi_br = False
 			was_br = False
@@ -133,7 +134,7 @@ def build_index():
 			continue
 
 		elems = []
-		entry = entry_seg.value.strip(',').lower()
+		entry = entry_seg.value.strip(',')
 		pageno = entry_seg.pageno
 		index[entry].append([pageno, elems])
 		for elem in chunk:
