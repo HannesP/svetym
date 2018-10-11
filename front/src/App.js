@@ -65,6 +65,26 @@ class BigSearch extends Component {
   }
 }
 
+class Segments extends Component {
+  segmentToComponent([type, value], key) {
+    if (type === "_t") {
+      return <span key={key}>{value}</span>;
+    }
+
+    return React.createElement(type, { key }, value);
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        {this.props.segments.map((segment, segNo) =>
+          this.segmentToComponent(segment, segNo)
+        )}
+      </React.Fragment>
+    );
+  }
+}
+
 class SearchView extends Component {
   constructor(props) {
     super(props);
@@ -109,26 +129,26 @@ class SearchView extends Component {
       return <Redirect to={`/entry/${query}/1`} />;
     }
 
-    const withMultiple = entries
+    /*const withMultiple = entries
       .filter(([entry, defNo]) => defNo > 1)
-      .map(([entry, defNo]) => entry);
+      .map(([entry, defNo]) => entry);*/
 
-    return hasReceived === false ? <span className="loading"/> : (
+    return hasReceived === false ? (
+      <span className="loading" />
+    ) : (
       <div>
         <p>
           Results for "{query}
           ":
         </p>
-        <ul>
-          {entries.map(([entry, defNo], i) => (
-            <li key={i}>
-              <Link to={`/entry/${entry}/${defNo}`}>
-                {entry}{" "}
-                {withMultiple.indexOf(entry) === 0 ? `(${defNo})` : null}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        {entries.map(({ entry, defNo, preview: [segments, didCap] }, i) => (
+          <p key={`${entry}_${defNo}`}>
+            <Link to={`/entry/${entry}/${defNo}`}>
+              <Segments segments={segments.slice(0, 10)} />
+              {didCap ? " …" : ""}
+            </Link>
+          </p>
+        ))}
       </div>
     );
   }
@@ -186,9 +206,7 @@ class EntryView extends Component {
           <title>{query}</title>
         </Helmet>
         <div className="definition">
-          {segments.map((segment, segNo) =>
-            this.segmentToComponent(segment, segNo)
-          )}
+          <Segments segments={segments} />
           <RunebergLink pageNo={pageNo} />
         </div>
       </React.Fragment>
@@ -266,10 +284,7 @@ class Layout extends Component {
     const title = "Svensk etymologisk ordbok";
     return (
       <div className="App">
-        <Helmet
-          defaultTitle={title}
-          titleTemplate={"%s – " + title}
-        />
+        <Helmet defaultTitle={title} titleTemplate={"%s – " + title} />
         <Route
           path="/"
           render={({ location }) => (
