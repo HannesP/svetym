@@ -7,7 +7,7 @@ const indexKeys = Object.keys(index);
 app = express();
 
 app.get("/api/entry/:entry/:defNo", (req, res) => {
-  const {defNo, entry} = req.params;
+  const { defNo, entry } = req.params;
 
   const definitions = index[entry];
   if (definitions == null) {
@@ -23,7 +23,7 @@ app.get("/api/entry/:entry/:defNo", (req, res) => {
 });
 
 function sum(a, b) {
-  return a+b;
+  return a + b;
 }
 
 function caseInsMatch(needle, haystack) {
@@ -34,8 +34,8 @@ function preview(segments) {
   const cap = 100;
 
   const lens = segments.map(([, text]) => text.length);
-  const cumLens =lens.map((len, i, arr) => arr.slice(0, i+1).reduce(sum));
-  
+  const cumLens = lens.map((len, i, arr) => arr.slice(0, i + 1).reduce(sum));
+
   const limit = cumLens.find(len => len > cap);
   const i = cumLens.indexOf(limit);
 
@@ -47,17 +47,14 @@ function preview(segments) {
   const last = segments[i];
 
   const firstLen = first.map(([, text]) => text.length).reduce(sum);
-  const shortened = [...first, [
-    last[0],
-    last[1].substr(0, cap - firstLen)
-  ]];
+  const shortened = [...first, [last[0], last[1].substr(0, cap - firstLen)]];
 
   return [shortened, true];
 }
 
 app.get("/api/search/:query", (req, res) => {
   const query = req.params.query;
-  
+
   const found = indexKeys
     .filter(key => caseInsMatch(query, key))
     .slice(0, 25)
@@ -73,6 +70,5 @@ app.get("/api/search/:query", (req, res) => {
 
   res.json(found);
 });
-
 
 app.listen(8989);
