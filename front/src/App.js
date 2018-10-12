@@ -10,9 +10,9 @@ class Nav extends Component {
   render() {
     return (
       <nav className="navbar navbar-light bg-light">
-        <a className="navbar-brand" href="/">
+        <Link to="/" className="navbar-brand">
           Svetym
-        </a>
+        </Link>
         <ul className="navbar-nav mr-auto">
           <li className="nav-item">
             <Link to="/about" className="nav-link">
