@@ -8,5 +8,5 @@ WORKDIR /svetym-back
 COPY package.json package-lock.json ./
 RUN npm install
 
-COPY . .
+COPY index.js svetym.json ./
 CMD ["node", "."]
