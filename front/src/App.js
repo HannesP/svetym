@@ -199,7 +199,7 @@ class EntryView extends Component {
     return (
       <React.Fragment>
         <Helmet>
-          <title>{query}</title>
+          <title>{query[0]}</title>
         </Helmet>
         <div className="definition">
           <Segments segments={segments} />
