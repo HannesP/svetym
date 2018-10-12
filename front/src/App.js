@@ -239,7 +239,10 @@ const About = () => (
       site is just a convenience for accessing it.
     </p>
     <p>
-      <a href={"mailto:" + emailAddress()}>{emailAddress()}</a>
+      Contact: <a href={"mailto:" + emailAddress()}>{emailAddress()}</a>
+    </p>
+    <p>
+      GitHub: <a href="https://github.com/HannesP/svetym">https://github.com/HannesP/svetym</a>
     </p>
   </div>
 );
