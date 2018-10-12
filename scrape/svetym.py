@@ -1,6 +1,8 @@
 import re, requests, json, lxml.html
 from collections import defaultdict
 
+__path__ = []
+
 class Segment:
 	def __init__(self, tag, value, pageno):
 		self.tag = tag
