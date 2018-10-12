@@ -12,4 +12,5 @@ to download the HTML files into a directory `html`.
 
 Run
 
+	$ pip install -r requirements.txt
     $ python -m svetym > svetym.json
