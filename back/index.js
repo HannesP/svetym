@@ -52,23 +52,32 @@ function preview(segments) {
   return [shortened, true];
 }
 
+
+function formSearchResults(defs, key) {
+  return defs.map(([, segs], i) => ({
+    entry: key,
+    defNo: i + 1,
+    preview: preview(segs)
+  }));
+}
+
 app.get("/api/search/:query", (req, res) => {
   const query = req.params.query;
 
-  const found = indexKeys
+  const lookups = index[query] || [];
+  const exact = formSearchResults(lookups, query);
+
+  const partial = indexKeys
     .filter(key => caseInsMatch(query, key))
+    .filter(key => key !== query)
     .slice(0, 25)
     .map(key => {
       const defs = index[key];
-      return defs.map(([, segs], i) => ({
-        entry: key,
-        defNo: i + 1,
-        preview: preview(segs)
-      }));
+      return formSearchResults(defs, key);
     })
     .reduce((accum, curr) => [...accum, ...curr], []);
 
-  res.json(found);
+  res.json({exact, partial});
 });
 
 app.listen(8989);

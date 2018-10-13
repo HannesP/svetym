@@ -35,6 +35,7 @@ img {
   opacity: 0;
   animation: fadeIn 1s;
   animation-delay: 1s;
+  animation-fill-mode: forwards;
 }
 
 .loading::after {

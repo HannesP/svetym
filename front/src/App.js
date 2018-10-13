@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Helmet } from "react-helmet";
 import { BrowserRouter, Route, Link } from "react-router-dom";
 import queryString from "query-string";
@@ -76,11 +76,11 @@ class Segments extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <Fragment>
         {this.props.segments.map((segment, segNo) =>
           this.segmentToComponent(segment, segNo)
         )}
-      </React.Fragment>
+      </Fragment>
     );
   }
 }
@@ -88,7 +88,7 @@ class Segments extends Component {
 class SearchView extends Component {
   constructor(props) {
     super(props);
-    this.state = { entries: [], hasReceived: false };
+    this.state = { exact: [], partial: [], hasReceived: false };
   }
 
   parseQuery(props) {
@@ -99,7 +99,9 @@ class SearchView extends Component {
   searchEntries(query) {
     return fetch(`/api/search/${query}`)
       .then(res => (res.ok ? res.json() : []))
-      .then(entries => this.setState({ entries, hasReceived: true }));
+      .then(({ exact, partial }) => {
+        this.setState({ exact, partial, hasReceived: true });
+      });
   }
 
   componentDidMount() {
@@ -115,29 +117,30 @@ class SearchView extends Component {
   }
 
   render() {
-    const { entries, hasReceived } = this.state;
-    const query = this.parseQuery();
+    const { exact, partial, hasReceived } = this.state;
 
-    if (hasReceived && entries.length === 0) {
+    if (!hasReceived) {
+      return <span className="loading" />;
+    }
+
+    const query = this.parseQuery();
+    const notFound = exact.length + partial.length === 0;
+    const foundBoth = exact.length * partial.length > 0;
+
+    if (notFound === 0) {
       return <NotFound query={query} />;
     }
 
-    if (entries.length === 1) {
-      const entry = entries[0].entry;
+    if (exact.length === 1 && partial.length === 0) {
+      const entry = exact[0].entry;
       if (entry.toLowerCase() === query.toLowerCase()) {
         return <Redirect to={`/entry/${entry}/1`} />;
       }
     }
-    
-    return hasReceived === false ? (
-      <span className="loading" />
-    ) : (
-      <div>
-        <p>
-          Results for "{query}
-          ":
-        </p>
-        {entries.map(({ entry, defNo, preview: [segments, didCap] }, i) => (
+
+    const ResultList = ({ matches }) => (
+      <Fragment>
+        {matches.map(({ entry, defNo, preview: [segments, didCap] }, i) => (
           <p key={`${entry}_${defNo}`}>
             <Link to={`/entry/${entry}/${defNo}`}>
               <Segments segments={segments.slice(0, 10)} />
@@ -145,6 +148,18 @@ class SearchView extends Component {
             </Link>
           </p>
         ))}
+      </Fragment>
+    );
+
+    return (
+      <div>
+        <p>
+          Results for "{query}
+          ":
+        </p>
+        <ResultList matches={exact} />
+        {foundBoth && <hr />}
+        <ResultList matches={partial} />
       </div>
     );
   }
@@ -197,7 +212,7 @@ class EntryView extends Component {
     const query = this.parseQuery();
 
     return (
-      <React.Fragment>
+      <Fragment>
         <Helmet>
           <title>{query[0]}</title>
         </Helmet>
@@ -205,7 +220,7 @@ class EntryView extends Component {
           <Segments segments={segments} />
           <RunebergLink pageNo={pageNo} />
         </div>
-      </React.Fragment>
+      </Fragment>
     );
   }
 }
@@ -242,7 +257,10 @@ const About = () => (
       Contact: <a href={"mailto:" + emailAddress()}>{emailAddress()}</a>
     </p>
     <p>
-      GitHub: <a href="https://github.com/HannesP/svetym">https://github.com/HannesP/svetym</a>
+      GitHub:{" "}
+      <a href="https://github.com/HannesP/svetym">
+        https://github.com/HannesP/svetym
+      </a>
     </p>
   </div>
 );
