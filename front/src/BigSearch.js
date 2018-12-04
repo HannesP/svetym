@@ -7,7 +7,7 @@ export default class BigSearch extends Component {
         <img
           width="50%"
           height="50%"
-          className="mx-auto"
+          className="elof mx-auto"
           alt="Elof Hellquist"
           title="Elof Hellquist, 1864–1933"
           src="/elof.png"

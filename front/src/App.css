@@ -17,15 +17,6 @@ nav {
   size: 2em !important;
 }
 
-img {
-  width: 10em;
-  height: 10em;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  opacity: 0.15;
-  display: block;
-}
-
 @keyframes fadeIn {
   from { opacity: 0; }
     to { opacity: 1; }
@@ -51,4 +42,18 @@ img {
 .BigSearch h2 {
   margin-bottom: 1em;
   font-size: 1em;
+}
+
+.BigSearch .elof {
+  width: 10em;
+  height: 10em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  opacity: 0.15;
+  display: block;
+  transition: opacity ease-in-out 0.25s;
+}
+
+.BigSearch .elof:hover {
+  opacity: 1;
 }
