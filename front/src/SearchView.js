@@ -8,12 +8,10 @@ const NotFound = ({ query }) => (
   <div className="alert alert-warning">No result for "{query}".</div>
 );
 
-export default function SearchView(props) {
+function useSearchResult(query) {
   const [exact, setExact] = useState([]);
   const [partial, setPartial] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const query = queryString.parse(props.location.search).q || "";
 
   useEffect(() => {
     (async function() {
@@ -26,6 +24,13 @@ export default function SearchView(props) {
       setIsLoading(false);
     })();
   }, [query]);
+
+  return { exact, partial, isLoading };
+}
+
+export default function SearchView(props) {
+  const query = queryString.parse(props.location.search).q || "";
+  const { exact, partial, isLoading } = useSearchResult(query);
 
   if (isLoading) {
     return <span className="loading" />;
