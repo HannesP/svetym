@@ -57,7 +57,7 @@ export default class Layout extends Component {
         <div className="container">
           <Route path="/" exact component={BigSearch} />
           <Route path="/search" component={SearchView} />
-          <Route path="/entry/:entry/:defNo" component={EntryView} />
+          <Route path="/entry/:word/:defNo" component={EntryView} />
           <Route path="/about" component={About} />
         </div>
       </div>
