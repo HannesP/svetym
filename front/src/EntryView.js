@@ -33,12 +33,19 @@ function useEntry(word, defNo) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let alive = true;
+
     (async () => {
       const res = await fetch(`/api/entry/${word}/${defNo}`);
       const data = res.ok ? await res.json() : null;
-      setEntry(data);
-      setIsLoading(false);
+      
+      if (alive) {
+        setEntry(data);
+        setIsLoading(false);
+      }
     })();
+
+    return () => { alive = false; }
   }, [word, defNo]);
 
   return { entry, isLoading };
