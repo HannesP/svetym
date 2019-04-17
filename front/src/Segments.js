@@ -1,21 +1,19 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 
-export default class Segments extends Component {
-  segmentToComponent([type, value], key) {
-    if (type === "_t") {
-      return <span key={key}>{value}</span>;
-    }
-
-    return React.createElement(type, { key }, value);
+function segmentToComponent([type, value], key) {
+  if (type === "_t") {
+    return <span key={key}>{value}</span>;
   }
 
-  render() {
-    return (
-      <Fragment>
-        {this.props.segments.map((segment, segNo) =>
-          this.segmentToComponent(segment, segNo)
-        )}
-      </Fragment>
-    );
-  }
+  return React.createElement(type, { key }, value);
+}
+
+export default function Segments(props) {
+  return (
+    <Fragment>
+      {props.segments.map((segment, segNo) =>
+        segmentToComponent(segment, segNo)
+      )}
+    </Fragment>
+  );
 }
