@@ -25,7 +25,7 @@ function NotFound({ word }) {
 }
 
 function Loading() {
-  return "Loading...";
+  return <span className="loading" />;
 }
 
 function useEntry(word, defNo) {
@@ -38,14 +38,16 @@ function useEntry(word, defNo) {
     (async () => {
       const res = await fetch(`/api/entry/${word}/${defNo}`);
       const data = res.ok ? await res.json() : null;
-      
+
       if (alive) {
         setEntry(data);
         setIsLoading(false);
       }
     })();
 
-    return () => { alive = false; }
+    return () => {
+      alive = false;
+    };
   }, [word, defNo]);
 
   return { entry, isLoading };
