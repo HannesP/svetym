@@ -11,16 +11,9 @@ function RunebergLink({ pageNo }) {
   return <a href={href}>ᚱ</a>;
 }
 
-function NotFound({ word }) {
+function NotFound() {
   return (
-    <span>
-      The word{" "}
-      <span style={{ fontWeight: "bold" }}>
-        <sup>10</sup>
-        {word}
-      </span>{" "}
-      is not in the dictionary.
-    </span>
+    <div className="alert alert-danger">This word is not in the dictionary.</div>
   );
 }
 
@@ -62,7 +55,7 @@ export default function EntryView(props) {
   }
 
   if (entry == null) {
-    return <NotFound word={word} />;
+    return <NotFound />;
   }
 
   const [pageNo, segments] = entry;
